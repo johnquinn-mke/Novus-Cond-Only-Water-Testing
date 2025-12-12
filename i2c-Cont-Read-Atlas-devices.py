@@ -19,6 +19,9 @@ def check_stability(reading, reading_list, sigma, stability_dict, probe_name):
         is_stable = 'Stable' 
     return delta, is_stable
 
+class SensorError(Exception):
+    pass
+
 ####################################   Define Stability Function    ####################################
 
 def main():
@@ -121,7 +124,10 @@ def main():
             # reading_Temp_2 = I2C_readings[3].split(':')        
             # reading_RTD_Ref  = I2C_readings[5].split(':')
                    
-              
+            if reading_pH_Mettler or reading_pH_Unitrode or reading_pH_Ecotrode or reading_Temp_1 is not float:
+                raise SensorError("1 or more Seneor errors")
+
+
             if reading_pH_Mettler[-1] != b'*OK\r' :
                 Ecotrode_pH_list.append(float(reading_pH_Ecotrode[1]))
                 Unitrode_pH_list.append(float(reading_pH_Unitrode[1]))
