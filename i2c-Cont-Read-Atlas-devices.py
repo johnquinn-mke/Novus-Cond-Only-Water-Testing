@@ -19,8 +19,8 @@ def check_stability(reading, reading_list, sigma, stability_dict, probe_name):
         is_stable = 'Stable' 
     return delta, is_stable
 
-class SensorError(Exception):
-    pass
+# class SensorError(Exception):
+#     pass
 
 ####################################   Define Stability Function    ####################################
 
@@ -123,10 +123,10 @@ def main():
             reading_Temp_1= I2C_readings[3].split(':')
             # reading_Temp_2 = I2C_readings[3].split(':')        
             # reading_RTD_Ref  = I2C_readings[5].split(':')
-                   
-            if reading_pH_Mettler or reading_pH_Unitrode or reading_pH_Ecotrode or reading_Temp_1 is not float:
-                raise SensorError("1 or more Seneor errors")
+            print(reading_Temp_1)
 
+            if reading_pH_Mettler or reading_pH_Unitrode or reading_pH_Ecotrode or reading_Temp_1 is not float:
+               pass
 
             if reading_pH_Mettler[-1] != b'*OK\r' :
                 Ecotrode_pH_list.append(float(reading_pH_Ecotrode[1]))
@@ -139,49 +139,51 @@ def main():
                 
                 # Press_1_list.append(float(reading_Press_1[1]))
                 # Press_2_list.append(float(reading_Press_2[1]))
+
+                if Ecotrode_pH_list[0] or Unitrode_pH_list[0] or Mettler_pH_list[0] or temp_1_list[0] is not float:
+                    pass
                 
-                
-                print('\n')
-                print(f"Time Elapsed:{time_elapsed_overall}\nK1.0 Conductivity:{reading_pH_Mettler[1]} uS/cm \nK0.1 #1 Conductivity:{reading_pH_Unitrode[1]} uS/cm \nK0.1 #2 Conductivity:{reading_pH_Ecotrode[1]} uS/cm \nK0.1 #3 Conductivity:{reading_Temp_1[1]} uS/cm")
+                    print('\n')
+                    print(f"Time Elapsed:{time_elapsed_overall}\nK1.0 Conductivity:{reading_pH_Mettler[1]} uS/cm \nK0.1 #1 Conductivity:{reading_pH_Unitrode[1]} uS/cm \nK0.1 #2 Conductivity:{reading_pH_Ecotrode[1]} uS/cm \nK0.1 #3 Conductivity:{reading_Temp_1[1]} uS/cm")
 
 
-                # print(f"Time Elapsed:{time_elapsed_overall}\nTemp 1:{reading_Temp_2[1]} C     Temp 2:{reading_Temp_1[1]} C     Ref Temp:{reading_RTD_Ref[1]} C")
-                # print(f"Ecotrode:{reading_pH_Ecotrode[1]} pH     Unitrode:{reading_pH_Unitrode[1]} pH     Mettler:{reading_pH_Mettler[1]} pH")
+                    # print(f"Time Elapsed:{time_elapsed_overall}\nTemp 1:{reading_Temp_2[1]} C     Temp 2:{reading_Temp_1[1]} C     Ref Temp:{reading_RTD_Ref[1]} C")
+                    # print(f"Ecotrode:{reading_pH_Ecotrode[1]} pH     Unitrode:{reading_pH_Unitrode[1]} pH     Mettler:{reading_pH_Mettler[1]} pH")
 
-            # if len(Unitrode_pH_list) > 2 and len(Ecotrode_pH_list) and len(Mettler_pH_list) > 2:
-            #         # Check for stability
-            #         Ecotrode_delta, Ecotrode_stability = check_stability(float(reading_pH_Ecotrode[1]), Ecotrode_pH_list, SIGMA_PH, pH_stability_dict, 'Eco')
-            #         Unitrode_delta, Unitrode_stability = check_stability(float(reading_pH_Unitrode[1]), Unitrode_pH_list, SIGMA_PH, pH_stability_dict, 'Uni')
-            #         Mettler_delta, Mettler_stability = check_stability(float(reading_pH_Mettler[1]), Mettler_pH_list, SIGMA_PH, pH_stability_dict, 'Mettler')
+                # if len(Unitrode_pH_list) > 2 and len(Ecotrode_pH_list) and len(Mettler_pH_list) > 2:
+                #         # Check for stability
+                #         Ecotrode_delta, Ecotrode_stability = check_stability(float(reading_pH_Ecotrode[1]), Ecotrode_pH_list, SIGMA_PH, pH_stability_dict, 'Eco')
+                #         Unitrode_delta, Unitrode_stability = check_stability(float(reading_pH_Unitrode[1]), Unitrode_pH_list, SIGMA_PH, pH_stability_dict, 'Uni')
+                #         Mettler_delta, Mettler_stability = check_stability(float(reading_pH_Mettler[1]), Mettler_pH_list, SIGMA_PH, pH_stability_dict, 'Mettler')
+                        
+                #         print(f"Time Elapsed:{time_elapsed_overall}     Stable Count: {stable_period}\n\nUnitrode :{reading_pH_Unitrode[1]}pH       Stable?:{Unitrode_stability}    Delta:{Unitrode_delta} \nEcotrode :{reading_pH_Ecotrode[1]}pH       Stable?:{Ecotrode_stability}    Delta:{Ecotrode_delta} \nMettler :{reading_pH_Mettler[1]}pH       Stable?:{Mettler_stability}    Delta:{Mettler_delta}\n\n\n")
+
+                #         if Ecotrode_stability == 'Stable' and Ecotrode_stability == 'Stable' and Mettler_stability == 'Stable':
+                #             stable_period += 1
+                #             if stable_period > 30:  # Reached 30 seconds of initial stability
+                #                 pump_active = True
+                #         else:
+                #             stable_period = 0  # Reset stable period if not stable
+                #             pump_active = False         
+                                                
+
+                    now = datetime.datetime.now()
+                    loop_time_end = time()
+                    loop_time = (loop_time_end-loop_time_start)
+                    with open(filename, "a", newline='') as DataoutCsv:
+                        csv_writer = csv.writer(DataoutCsv, delimiter=';')
+                        csv_writer.writerow([now.strftime("%Y-%m-%d %H:%M:%S"),time_elapsed_overall, loop_time, reading_pH_Mettler[1],reading_pH_Unitrode[1],reading_pH_Ecotrode[1], reading_Temp_1[1]])
                     
-            #         print(f"Time Elapsed:{time_elapsed_overall}     Stable Count: {stable_period}\n\nUnitrode :{reading_pH_Unitrode[1]}pH       Stable?:{Unitrode_stability}    Delta:{Unitrode_delta} \nEcotrode :{reading_pH_Ecotrode[1]}pH       Stable?:{Ecotrode_stability}    Delta:{Ecotrode_delta} \nMettler :{reading_pH_Mettler[1]}pH       Stable?:{Mettler_stability}    Delta:{Mettler_delta}\n\n\n")
-
-            #         if Ecotrode_stability == 'Stable' and Ecotrode_stability == 'Stable' and Mettler_stability == 'Stable':
-            #             stable_period += 1
-            #             if stable_period > 30:  # Reached 30 seconds of initial stability
-            #                 pump_active = True
-            #         else:
-            #             stable_period = 0  # Reset stable period if not stable
-            #             pump_active = False         
-                                              
-
-                now = datetime.datetime.now()
-                loop_time_end = time()
-                loop_time = (loop_time_end-loop_time_start)
-                with open(filename, "a", newline='') as DataoutCsv:
-                    csv_writer = csv.writer(DataoutCsv, delimiter=';')
-                    csv_writer.writerow([now.strftime("%Y-%m-%d %H:%M:%S"),time_elapsed_overall, loop_time, reading_pH_Mettler[1],reading_pH_Unitrode[1],reading_pH_Ecotrode[1], reading_Temp_1[1]])
-                   
-            # if loop_time == None:
-            #     loop_time_end = time()
-            #     loop_time = (loop_time_end-loop_time_start)                
-            # print("Loop Time: ",loop_time)
-            # sleep(1-(loop_time)) 
-            
+                # if loop_time == None:
+                #     loop_time_end = time()
+                #     loop_time = (loop_time_end-loop_time_start)                
+                # print("Loop Time: ",loop_time)
+                # sleep(1-(loop_time)) 
+                
     except KeyboardInterrupt:
             print("Data Logging Stopped By User")
             exit()  
-    except                 
+
 
 
 if __name__ == "__main__":
