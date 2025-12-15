@@ -14,6 +14,7 @@ from time import time
 
 from Atlas_I2C_Driver_JQ import Config_AtlasI2C, read_recieve_all
 
+
 def parse_sensor_value(resp: str):
     """
     Parse an Atlas I2C response into a float.
@@ -52,6 +53,7 @@ def parse_sensor_value(resp: str):
         return None, f"value_error:rhs={rhs!r}"
     except Exception as e:
         return None, f"exception:{type(e).__name__}:{e}"
+
 
 def main():
     # Output filename
@@ -156,3 +158,7 @@ def main():
 
     except KeyboardInterrupt:
         print("Data Logging Stopped By User")
+
+
+if __name__ == "__main__":
+    main()
