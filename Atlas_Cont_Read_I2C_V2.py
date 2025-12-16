@@ -111,9 +111,9 @@ def main():
             # 0 -> K0.1 #1 Conductivity
             # 1 -> K0.1 #2 Conductivity
             # 2 -> K0.1 #3 Conductivity
-            val_k01_1, err_k01_1 = parse_sensor_value(readings[0])
-            val_k01_2, err_k01_2 = parse_sensor_value(readings[1])
-            val_k01_3, err_k01_3 = parse_sensor_value(readings[2])
+            val_k01_1, err_k01_1 = parse_sensor_value(readings[1])
+            val_k01_2, err_k01_2 = parse_sensor_value(readings[2])
+            val_k01_3, err_k01_3 = parse_sensor_value(readings[3])
 
             errors = [e for e in [err_k01_1, err_k01_2, err_k01_3] if e]
             have_error = len(errors) > 0
